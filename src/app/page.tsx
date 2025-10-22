@@ -9,6 +9,7 @@ import FilterList from "./components/FilterList";
 import RestaurantCard from "./components/RestaurantCard";
 import { useEffect, useState } from "react";
 import { getRestaurants, getFilters } from "./api/getData";
+import { getRouteRegex } from "next/dist/shared/lib/router/utils/route-regex";
 
 export default function Home() {
   const [restaurants, setRestaurants] = useState([]);
@@ -48,13 +49,25 @@ export default function Home() {
     }
   }, [filters.length]);
 
+  const filterRestaurants = (filterId:string) => {
+    console.log('filtering restaurants by', filterId);
+    getRestaurants().then(response => {
+      const filteredRestaurants = response.restaurants.filter(obj => obj.filter_ids.includes(filterId));
+      setRestaurants(filteredRestaurants);
+    });
+  }
+
+  const filterDeliveryTime = (times:string[]) => {
+    console.log('filtering by delivery time:', times);
+  };
+
   return (
     <Container maxWidth="xl" sx={{ padding: '32px 16px'}}>
       <Stack spacing={4}>
         <Box component="img" src="/images/munchies-logo--web.svg" alt="Munchies" sx={{ width: '273px' }} />
         <Grid container spacing={4}>
           <Grid size={2}>
-            <FilterList />
+            <FilterList filterDeliveryTime={filterDeliveryTime}/>
           </Grid>
           <Grid size={10}>
             <Stack spacing={4}>
@@ -62,7 +75,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                   {filters.map((filter) => (
                     <Grid key={filter.id} size={2}>
-                      <FilterCard filter={filter} />
+                      <FilterCard filter={filter} filterRestaurants={filterRestaurants} />
                     </Grid>
                   ))}
                 </Grid>

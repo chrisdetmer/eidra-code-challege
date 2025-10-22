@@ -21,7 +21,7 @@ interface RestaurantCardProps {
 export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
 
   const viewRestaurant = (restaurantName: string) => {
-    alert(`You picked ${restaurantName}`)
+    console.log(`You picked ${restaurantName}`)
   }
   return (
     <Card 
